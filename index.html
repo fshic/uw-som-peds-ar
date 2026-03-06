@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UW Pediatrics - Youth STEMM Career Resources</title>
+    <style>
+        /* Base Colors */
+        :root {
+            --uw-purple: #4b2e83;
+            --uw-gold: #85754d;
+            --light-gray: #f4f4f4;
+            --text-dark: #333333;
+        }
+
+        body {
+            font-family: 'Open Sans', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-gray);
+            color: var(--text-dark);
+        }
+
+        header {
+            background-color: var(--uw-purple);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        header h1 { margin: 0; font-size: 2.5rem; }
+        header p { font-size: 1.2rem; max-width: 800px; margin: 15px auto 0; opacity: 0.9; }
+        
+        #last-updated {
+            font-size: 0.85rem;
+            margin-top: 15px;
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        /* Filters */
+        .filters {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .filter-btn {
+            background-color: white;
+            border: 2px solid #ccc;
+            color: #666;
+            padding: 8px 16px;
+            margin: 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-btn:hover { background-color: #f0f0f0; }
+
+        /* Age Filter Dropdown */
+        .age-filter-container {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eaeaea;
+            display: inline-block;
+        }
+
+        .age-filter-container select {
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            color: var(--text-dark);
+            background-color: white;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        /* Grid & Cards */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            border-top: 6px solid transparent; 
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        .card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background-color: #eaeaea; 
+        }
+
+        .card-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tag-container { margin-bottom: 12px; }
+        
+        .tag {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            font-weight: bold;
+            margin-right: 5px;
+            text-transform: uppercase;
+        }
+        
+        .tag-eligibility {
+            background-color: #eee;
+            color: #555;
+        }
+
+        .card h3 {
+            margin: 0 0 10px 0;
+            color: var(--text-dark);
+            font-size: 1.25rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            flex-grow: 1;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .btn {
+            display: block;
+            text-align: center;
+            background-color: var(--uw-purple);
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover { background-color: #3b2466; }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: #666;
+            background: white;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 2rem; }
+            .filter-btn { display: block; width: 100%; margin: 5px 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Future Healthcare Leaders</h1>
+        <p>Explore opportunities, mentorships, and summer programs in Science, Technology, Engineering, Math, and Medicine (STEMM).</p>
+        <p id="last-updated"></p>
+    </header>
+
+    <div class="filters">
+        <div id="category-filters">
+            </div>
+        <div class="age-filter-container">
+            <label for="age-select"><strong>Filter by Age/Grade:</strong></label>
+            <select id="age-select" onchange="applyFilters()">
+                <option value="All">Show All Ages</option>
+                <option value="Middle School">Middle School</option>
+                <option value="High School">High School</option>
+                <option value="College">College</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="grid" id="resource-grid">
+            </div>
+    </div>
+
+    <script src="./data.js"></script>
+    
+    <script>
+        // 1. Define Natural Order & Color Mapping
+        const categoryConfig = [
+            { name: "Discover Your Path", color: "#4b2e83" },        // UW Purple
+            { name: "Academic Prep", color: "#85754d" },             // UW Gold
+            { name: "Summer Programs", color: "#0085CA" },           // Bright Blue
+            { name: "Shadowing & Observation", color: "#00A78F" },   // Teal
+            { name: "College Programs", color: "#C05131" },          // Burnt Orange
+            { name: "Financial & Scholarships", color: "#8A9A5B" }   // Moss Green
+        ];
+
+        // 2. Set Last Updated Timestamp
+        if (typeof resourceData !== 'undefined' && resourceData.metadata && resourceData.metadata.lastUpdated) {
+            document.getElementById('last-updated').innerText = `Updated on ${resourceData.metadata.lastUpdated}`;
+        }
+
+        // 3. Sort Data into Natural Order
+        let sortedResources = [];
+        if (typeof resourceData !== 'undefined' && resourceData.public_resources) {
+            categoryConfig.forEach(config => {
+                const itemsInCategory = resourceData.public_resources.filter(item => item.category === config.name);
+                sortedResources = sortedResources.concat(itemsInCategory);
+            });
+        }
+
+        // State variables for dual-filtering
+        let currentCategory = 'All';
+
+        // 4. Generate Filter Buttons
+        const filterContainer = document.getElementById('category-filters');
+        
+        // "All" Button
+        const allBtn = document.createElement('button');
+        allBtn.className = 'filter-btn active';
+        allBtn.innerText = 'All Resources';
+        allBtn.style.borderColor = '#4b2e83';
+        allBtn.style.backgroundColor = '#4b2e83';
+        allBtn.style.color = 'white';
+        allBtn.onclick = () => setCategoryFilter('All', allBtn, '#4b2e83');
+        filterContainer.appendChild(allBtn);
+
+        // Category Buttons
+        categoryConfig.forEach(config => {
+            const btn = document.createElement('button');
+            btn.className = 'filter-btn';
+            btn.innerText = config.name;
+            btn.style.borderColor = config.color;
+            btn.style.color = config.color;
+            btn.onclick = () => setCategoryFilter(config.name, btn, config.color);
+            filterContainer.appendChild(btn);
+        });
+
+        // 5. Render Cards Function
+        function renderCards(dataToRender) {
+            const grid = document.getElementById('resource-grid');
+            grid.innerHTML = ''; 
+
+            if (dataToRender.length === 0) {
+                grid.innerHTML = `<div class="no-results">No resources found for this specific combination. Please adjust your filters.</div>`;
+                return;
+            }
+
+            dataToRender.forEach(item => {
+                // Find color for this card
+                const config = categoryConfig.find(c => c.name === item.category);
+                const cardColor = config ? config.color : '#ccc';
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.borderTopColor = cardColor;
+                
+                card.innerHTML = `
+                    <img src="${item.image}" alt="${item.title}" loading="lazy">
+                    <div class="card-content">
+                        <div class="tag-container">
+                            <span class="tag tag-eligibility">${item.eligibility}</span>
+                            <span class="tag" style="background-color: ${cardColor}20; color: ${cardColor};">${item.category}</span>
+                        </div>
+                        <h3>${item.title}</h3>
+                        <p>${item.description}</p>
+                        <a href="${item.link}" target="_blank" class="btn" style="background-color: ${cardColor};">Learn More</a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // 6. Filter Logic
+        function setCategoryFilter(categoryName, clickedBtn, activeColor) {
+            currentCategory = categoryName;
+
+            // Reset all buttons styling
+            const allButtons = document.querySelectorAll('.filter-btn');
+            allButtons.forEach(btn => {
+                btn.style.backgroundColor = 'white';
+                // Restore original text color based on config or default purple for "All"
+                if(btn.innerText === 'All Resources') {
+                    btn.style.color = '#4b2e83';
+                } else {
+                    const c = categoryConfig.find(config => config.name === btn.innerText);
+                    btn.style.color = c ? c.color : '#666';
+                }
+            });
+
+            // Set active button styling
+            clickedBtn.style.backgroundColor = activeColor;
+            clickedBtn.style.color = 'white';
+
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const currentAge = document.getElementById('age-select').value;
+            let filtered = sortedResources;
+
+            // Apply Category Filter
+            if (currentCategory !== 'All') {
+                filtered = filtered.filter(item => item.category === currentCategory);
+            }
+
+            // Apply Age Filter
+            if (currentAge !== 'All') {
+                filtered = filtered.filter(item => item.filterAges && item.filterAges.includes(currentAge));
+            }
+
+            renderCards(filtered);
+        }
+
+        // Initialize grid on page load
+        applyFilters();
+    </script>
+</body>
+</html>
